@@ -69,11 +69,11 @@ app.post("/login", async (req, res) => {
     res.send("Login Success!");
     console.log("Login Success");
   } else {
-    const  = {
+    const failedLoginData = {
       status: 500,
       description: "Failed",
     };
-    res.send("Login Failed");
+    res.send(stringify(failedLoginData));
     console.log("Login failed");
   }
 });
