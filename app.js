@@ -81,8 +81,11 @@ app.post("/login", async (req, res) => {
   if (login) {
         res.header('Access-Control-Allow-Origin', '*');
 
-
-      res.json({ message: "User authenticated successfully" });
+      const success = {
+      status: 200,
+      description: "Failed",
+    };
+      res.json(success);
     console.log("Login Success");
   } else {
     const failed = {
