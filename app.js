@@ -1,13 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require('cors');
+// const cors = require('cors');
 
 const MongoClient = require("mongodb").MongoClient;
 const ObjectID = require("mongodb").ObjectID;
 const dbName = "prabisha";
 const collectionName = "users";
 const app = express();
-app.use(cors());
+// app.use(cors());
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -59,9 +59,8 @@ app.post("/register", async (req, res) => {
     .collection("users")
     .insertOne(user);
   console.log("User Details Registered Successfully");
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-  res.json(result);
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.json(result);
 });
 
 // Login API
@@ -81,7 +80,7 @@ app.post("/login", async (req, res) => {
       status: 500,
       description: "Failed",
     };
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.json(failed);
     console.log("Login failed");
@@ -95,7 +94,7 @@ app.listen(3003, () => {
 // Test API
 app.get("/", (req, res) => {
   console.log("Test API");
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
   res.send("Test API is Working fine!");
 });
@@ -130,7 +129,7 @@ app.get("/score/:email", async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error(error);
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.status(500).json({ error: "Internal server error" });
   }
@@ -157,7 +156,7 @@ app.get("/certificates/:email", async (req, res) => {
     const certificates = person.certificates;
 
     // Return the array as a response
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.json({ certificates });
   } catch (err) {
