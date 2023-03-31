@@ -76,7 +76,7 @@ app.post("/login", async (req, res) => {
     .collection("users")
     .findOne({ email: email, password: password });
   if (login) {
-    res.json(login);
+      res.json({ message: "User authenticated successfully" });
     console.log("Login Success");
   } else {
     const failed = {
