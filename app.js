@@ -103,8 +103,8 @@ app.listen(3003, () => {
 // Test API
 app.get("/", (req, res) => {
   console.log("Test API");
-    res.header('Access-Control-Allow-Origin', '*);
-
+  
+  res.header('Access-Control-Allow-Origin', '*');
   res.send("Test API is Working fine!");
 });
 
@@ -170,6 +170,7 @@ app.get("/certificates/:email", async (req, res) => {
     res.json({ certificates });
   } catch (err) {
     // Return an error response if an error occurs
+    res.header('Access-Control-Allow-Origin', '*');
     res.status(500).json({ error: err.message });
   }
 });
