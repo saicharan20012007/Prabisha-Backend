@@ -46,6 +46,8 @@ app.post("/register", async (req, res) => {
     dob: req.body.dob,
     phonenumber: req.body.phonenumber,
     address: req.body.address,
+    certificates: [],
+    scores: [0],
   };
 
   const result = await client
@@ -53,7 +55,7 @@ app.post("/register", async (req, res) => {
     .collection("users")
     .insertOne(user);
   console.log("User Details Registered Successfully");
-  res.send("Registration Success");
+  res.json(result);
 });
 
 // Login API
@@ -66,19 +68,19 @@ app.post("/login", async (req, res) => {
     .collection("users")
     .findOne({ email: email, password: password });
   if (login) {
-    res.send("Login Success!");
+    res.json(login);
     console.log("Login Success");
   } else {
-    const failedLoginData = {
+    const failed = {
       status: 500,
       description: "Failed",
     };
-    res.send(stringify(failedLoginData));
+    res.json(failed);
     console.log("Login failed");
   }
 });
 
-app.listen(3002, () => {
+app.listen(3003, () => {
   console.log("Server listening on port 3002");
 });
 
@@ -86,4 +88,64 @@ app.listen(3002, () => {
 app.get("/", (req, res) => {
   console.log("Test API");
   res.send("Test API is Working fine!");
+});
+
+// Define an API endpoint that retrieves the sum of the numbers array for a given email
+app.get("/score/:email", async (req, res) => {
+  try {
+    // Retrieve the email parameter from the request
+    const email = req.params.email;
+
+    // Find the user document with the given email
+    const person = await client
+      .db("prabisha")
+      .collection("users")
+      .findOne({ email });
+    console.log(person);
+    // If the user doesn't exist, return an error response
+    if (!person) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Loop through the array and sum the numbers field
+    let sum = 0;
+    person.scores.forEach((obj) => {
+      sum += obj.numbers.reduce((total, current) => total + current, 0);
+    });
+
+    // Return the sum as a response
+    res.json({ sum });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Define an API endpoint that retrieves the array based on the user's email
+app.get("/certificates/:email", async (req, res) => {
+  try {
+    // Retrieve the email parameter from the request
+    const email = req.query.email;
+
+    // Find the document with the given email
+    const person = await client
+      .db("prabisha")
+      .collection("users")
+      .findOne({ email });
+    console.log(person);
+    // If the document doesn't exist, return an error response
+    if (!person) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+
+    // Extract the array from the document
+    const certificates = person.certificates;
+
+    // Return the array as a response
+    res.json({ certificates });
+  } catch (err) {
+    // Return an error response if an error occurs
+    res.status(500).json({ error: err.message });
+  }
 });
