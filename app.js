@@ -65,8 +65,13 @@ app.post("/register", async (req, res) => {
     .collection("users")
     .insertOne(user);
   console.log("User Details Registered Successfully");
-    res.header('Access-Control-Allow-Origin', '*');
-      res.json(result);
+
+      const success = {
+      status: 200,
+      description: "Success",
+    };
+      res.header('Access-Control-Allow-Origin', '*');
+        res.json(success);
 });
 
 // Login API
@@ -83,7 +88,7 @@ app.post("/login", async (req, res) => {
 
       const success = {
       status: 200,
-      description: "Failed",
+      description: "Success",
     };
       res.json(success);
     console.log("Login Success");
