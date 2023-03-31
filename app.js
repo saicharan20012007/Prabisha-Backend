@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-// const cors = require('cors');
+const cors = require('cors');
 
 const MongoClient = require("mongodb").MongoClient;
 const ObjectID = require("mongodb").ObjectID;
@@ -9,6 +9,9 @@ const dbName = "prabisha";
 const collectionName = "users";
 const app = express();
 // app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 app.use(express.json()); // This will parse incoming request body as JSON
 
 
@@ -62,7 +65,7 @@ app.post("/register", async (req, res) => {
     .collection("users")
     .insertOne(user);
   console.log("User Details Registered Successfully");
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
       res.json(result);
 });
 
@@ -76,6 +79,9 @@ app.post("/login", async (req, res) => {
     .collection("users")
     .findOne({ email: email, password: password });
   if (login) {
+        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+
       res.json({ message: "User authenticated successfully" });
     console.log("Login Success");
   } else {
@@ -83,7 +89,7 @@ app.post("/login", async (req, res) => {
       status: 500,
       description: "Failed",
     };
-//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.json(failed);
     console.log("Login failed");
@@ -132,7 +138,7 @@ app.get("/score/:email", async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error(error);
-//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
 
     res.status(500).json({ error: "Internal server error" });
   }
