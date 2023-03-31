@@ -65,7 +65,7 @@ app.post("/register", async (req, res) => {
     .collection("users")
     .insertOne(user);
   console.log("User Details Registered Successfully");
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', '*');
       res.json(result);
 });
 
@@ -79,7 +79,7 @@ app.post("/login", async (req, res) => {
     .collection("users")
     .findOne({ email: email, password: password });
   if (login) {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.header('Access-Control-Allow-Origin', '*');
 
 
       res.json({ message: "User authenticated successfully" });
@@ -89,7 +89,7 @@ app.post("/login", async (req, res) => {
       status: 500,
       description: "Failed",
     };
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Origin', '*');
 
     res.json(failed);
     console.log("Login failed");
@@ -103,7 +103,7 @@ app.listen(3003, () => {
 // Test API
 app.get("/", (req, res) => {
   console.log("Test API");
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', '*);
 
   res.send("Test API is Working fine!");
 });
@@ -122,7 +122,7 @@ app.get("/score/:email", async (req, res) => {
     console.log(person);
     // If the user doesn't exist, return an error response
     if (!person) {
-        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.header('Access-Control-Allow-Origin', '*');
 
       return res.status(404).json({ error: "User not found" });
     }
@@ -138,7 +138,7 @@ app.get("/score/:email", async (req, res) => {
   } catch (error) {
     // Handle any errors that occur during the process
     console.error(error);
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Origin', '*');
 
     res.status(500).json({ error: "Internal server error" });
   }
@@ -165,7 +165,7 @@ app.get("/certificates/:email", async (req, res) => {
     const certificates = person.certificates;
 
     // Return the array as a response
-//       res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Origin', '*');
 
     res.json({ certificates });
   } catch (err) {
