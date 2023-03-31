@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 // const cors = require('cors');
 
 const MongoClient = require("mongodb").MongoClient;
@@ -8,6 +9,8 @@ const dbName = "prabisha";
 const collectionName = "users";
 const app = express();
 // app.use(cors());
+app.use(express.json()); // This will parse incoming request body as JSON
+
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
