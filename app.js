@@ -1,4 +1,13 @@
 const express = require("express");
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
+
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+dotenv.config();
+
 const bodyParser = require("body-parser");
 
 const cors = require('cors');
@@ -18,14 +27,13 @@ app.use(express.json()); // This will parse incoming request body as JSON
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
 
-// let db;
-
-// MongoClient.connect(url, (err, client) => {
-//   if (err) return console.log(err);
-//   console.log(`Connected to MongoDB server: ${url}`);
-//   db = client.db(dbName);
-// });
 
 // Connecting Data Base And Node JS
 
@@ -45,6 +53,59 @@ const main = async () => {
 };
 
 main();
+
+
+// Google Authentication
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: '/auth/google/callback'
+}, (accessToken, refreshToken, profile, done) => {
+  const user = {
+    googleId: profile.id,
+    email: profile.emails[0].value,
+    name: profile.displayName
+  };
+  done(null, user);
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user.googleId);
+});
+
+passport.deserializeUser((id, done) => {
+  done(null, { googleId: id });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/auth/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+}));
+
+app.get('/auth/google/callback', passport.authenticate('google', {
+  failureRedirect: '/login'
+}), (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/api/user', (req, res) => {
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.status(401).send('Unauthorized');
+  }
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+
+
 
 // Registration API
 app.post("/register", async (req, res) => {
@@ -104,7 +165,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.listen(3003, () => {
+app.listen(4000, () => {
   console.log("Server listening on port 3002");
 });
 
