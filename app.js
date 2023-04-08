@@ -57,52 +57,52 @@ main();
 
 // Google Authentication
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: '/auth/google/callback'
-}, (accessToken, refreshToken, profile, done) => {
-  const user = {
-    googleId: profile.id,
-    email: profile.emails[0].value,
-    name: profile.displayName
-  };
-  done(null, user);
-}));
+// passport.use(new GoogleStrategy({
+//   clientID: process.env.GOOGLE_CLIENT_ID,
+//   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//   callbackURL: '/auth/google/callback'
+// }, (accessToken, refreshToken, profile, done) => {
+//   const user = {
+//     googleId: profile.id,
+//     email: profile.emails[0].value,
+//     name: profile.displayName
+//   };
+//   done(null, user);
+// }));
 
-passport.serializeUser((user, done) => {
-  done(null, user.googleId);
-});
+// passport.serializeUser((user, done) => {
+//   done(null, user.googleId);
+// });
 
-passport.deserializeUser((id, done) => {
-  done(null, { googleId: id });
-});
+// passport.deserializeUser((id, done) => {
+//   done(null, { googleId: id });
+// });
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-app.get('/auth/google', passport.authenticate('google', {
-  scope: ['profile', 'email']
-}));
+// app.get('/auth/google', passport.authenticate('google', {
+//   scope: ['profile', 'email']
+// }));
 
-app.get('/auth/google/callback', passport.authenticate('google', {
-  failureRedirect: '/login'
-}), (req, res) => {
-  res.redirect('/');
-});
+// app.get('/auth/google/callback', passport.authenticate('google', {
+//   failureRedirect: '/login'
+// }), (req, res) => {
+//   res.redirect('/');
+// });
 
-app.get('/api/user', (req, res) => {
-  if (req.user) {
-    res.send(req.user);
-  } else {
-    res.status(401).send('Unauthorized');
-  }
-});
+// app.get('/api/user', (req, res) => {
+//   if (req.user) {
+//     res.send(req.user);
+//   } else {
+//     res.status(401).send('Unauthorized');
+//   }
+// });
 
-app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
+// app.get('/logout', (req, res) => {
+//   req.logout();
+//   res.redirect('/');
+// });
 
 
 
